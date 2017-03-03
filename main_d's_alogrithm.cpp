@@ -9,8 +9,10 @@ int cal(int *a[], int j) {	//Dijkstra’s algorithm
 	d = new int[j];//distance from source to certain junctions
 	int *p;
 	p = new int[j];// for the nodes on th shortest path from 0 junctions to n-1 junction, p[n] is its parent node 
-	
-
+	bool *r;// records whether rides bike on the road, for whose destination is n-th junction, true to ride bike ,flase not
+	r = new bool[j];
+	r[0] = false;// first to hold on back
+	r[j - 1] = true;// last to ride on bike
 	for (int i = 0; i < j; i++) {
 		d[i] = 20 * j;//initial all d to 20*j ( go through all roads and each road with maximum length)
 		d[0] = 0;
@@ -20,11 +22,21 @@ int cal(int *a[], int j) {	//Dijkstra’s algorithm
 	while (count<j) {
 		for (int i = 0;i < j;i++) { // the road whose source is count-th junction and destination is i-th junction
 			if (a[count][i]>1) {// there is the road whose destination junction is the count-th junction
-		
+				if (i<j - 1) {
 					if (d[i] > d[count] + a[count][i]) {
+						if (r[count])
+							r[i] = false;
+						else
+							r[i] = true;
 						d[i] = d[count] + a[count][i];
 						p[i] = count;
-					
+					}
+				}
+				else {
+					if (d[i] > d[count] + a[count][i] && r[count] == false&&count>0) {
+						d[i] = d[count] + a[count][i];
+						p[i] = count;
+					}
 				}
 				
 			}	
